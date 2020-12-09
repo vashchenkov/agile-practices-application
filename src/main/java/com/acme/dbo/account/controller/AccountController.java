@@ -37,6 +37,7 @@ public class AccountController {
     @PostMapping
     @ApiOperation(value = "CreateAccount", notes = "Create new account")
     public Long createAccount() {
+        accountService.createAccount();
         return 5L;
     }
 }

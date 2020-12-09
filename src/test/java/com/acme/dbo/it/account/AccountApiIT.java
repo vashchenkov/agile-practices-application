@@ -12,6 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+
 import static com.acme.dbo.account.domain.Account.builder;
 import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +52,9 @@ public class AccountApiIT {
 
     @Test
     public void shouldCreateNewAccountWhenPostRequestPerforms() throws Exception {
+        Double amount = 400.;
+        Long clientId = 2L;
+
         String accountCreateJsonString = mockMvc.perform(
                 post("/api/account").header("X-API-VERSION", "1")
         ).andDo(print()).andExpect(status().is(200))
@@ -63,7 +68,11 @@ public class AccountApiIT {
                 .andReturn().getResponse().getContentAsString();
         Account[] accountsFound = jsonMapper.readValue(accountsFoundJsonString, Account[].class);
 
+        Account account = Arrays.stream(accountsFound).filter(it -> it.getId() == responseId).findFirst().get();
+
         assertTrue(responseId > 0);
         assertEquals(4, accountsFound.length);
+        assertEquals(amount, account.getAmount());
+        assertEquals(clientId, account.getClientId());
     }
 }

@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.addAll;
 
 @ConditionalOnProperty(name = "features.account", havingValue = "true", matchIfMissing = true)
@@ -40,5 +42,11 @@ public class AccountService {
         Collection<Account> accounts = accountRepository.findAll();
         addAll(accounts, accountsFromLegacyAccountingSystem);
         return accounts;
+    }
+
+    public Long createAccount() {
+        Account account = new Account(null, 400., now().toInstant(), 2L);
+        account = accountRepository.save(account);
+        return account.getId();
     }
 }
