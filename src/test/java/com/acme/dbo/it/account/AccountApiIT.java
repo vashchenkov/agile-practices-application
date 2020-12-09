@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static com.acme.dbo.account.domain.Account.builder;
 import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,6 +57,13 @@ public class AccountApiIT {
 
         Long responseId = Long.parseLong(accountCreateJsonString);
 
+        String accountsFoundJsonString = mockMvc.perform(
+                get("/api/account").header("X-API-VERSION", "1")
+        ).andDo(print()).andExpect(status().is(200))
+                .andReturn().getResponse().getContentAsString();
+        Account[] accountsFound = jsonMapper.readValue(accountsFoundJsonString, Account[].class);
+
         assertTrue(responseId > 0);
+        assertEquals(4, accountsFound.length);
     }
 }

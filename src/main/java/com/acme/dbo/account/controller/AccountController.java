@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +32,11 @@ public class AccountController {
     @ApiOperation(value = "GetAccounts", notes = "Returned all created address of selected currency name")
     public Collection<Account> getAccounts() {
         return accountService.getAccounts();
+    }
+
+    @PostMapping
+    @ApiOperation(value = "CreateAccount", notes = "Create new account")
+    public Long createAccount() {
+        return 5L;
     }
 }
