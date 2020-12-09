@@ -9,10 +9,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -34,10 +32,10 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "CreateAccount", notes = "Create new account")
-    public Long createAccount() {
-        accountService.createAccount();
-        return 5L;
+    public Long createAccount(@RequestBody
+                                          NewAccountDTO accountDTO) {
+        return accountService.createAccount(accountDTO.getAmount(), accountDTO.getClientId());
     }
 }

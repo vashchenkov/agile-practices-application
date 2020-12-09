@@ -1,5 +1,6 @@
 package com.acme.dbo.it.account;
 
+import com.acme.dbo.account.controller.NewAccountDTO;
 import com.acme.dbo.account.domain.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.FieldDefaults;
@@ -8,13 +9,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import static com.acme.dbo.account.domain.Account.builder;
+import static java.time.LocalDate.now;
 import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,8 +63,13 @@ public class AccountApiIT {
         Double amount = 400.;
         Long clientId = 2L;
 
+        NewAccountDTO dto = new NewAccountDTO();
+        dto.setAmount(amount);
+        dto.setClientId(clientId);
         String accountCreateJsonString = mockMvc.perform(
-                post("/api/account").header("X-API-VERSION", "1")
+                post("/api/account").contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonMapper.writeValueAsString(dto))
+                        .header("X-API-VERSION", "1")
         ).andDo(print()).andExpect(status().is(200))
                 .andReturn().getResponse().getContentAsString();
 
@@ -68,7 +81,7 @@ public class AccountApiIT {
                 .andReturn().getResponse().getContentAsString();
         Account[] accountsFound = jsonMapper.readValue(accountsFoundJsonString, Account[].class);
 
-        Account account = Arrays.stream(accountsFound).filter(it -> it.getId() == responseId).findFirst().get();
+        Account account = Arrays.stream(accountsFound).filter(it -> it.getId().equals(responseId) ).findFirst().get();
 
         assertTrue(responseId > 0);
         assertEquals(4, accountsFound.length);

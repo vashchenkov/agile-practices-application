@@ -44,8 +44,8 @@ public class AccountService {
         return accounts;
     }
 
-    public Long createAccount() {
-        Account account = new Account(null, 400., now().toInstant(), 2L);
+    public Long createAccount(double amount, long clientId) {
+        Account account = new Account(null, amount, now().toInstant(), clientId);
         account = accountRepository.save(account);
         return account.getId();
     }
