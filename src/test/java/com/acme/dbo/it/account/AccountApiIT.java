@@ -17,6 +17,7 @@ import static lombok.AccessLevel.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +49,12 @@ public class AccountApiIT {
 
     @Test
     public void shouldCreateNewAccountWhenPostRequestPerforms() throws Exception {
+        String accountCreateJsonString = mockMvc.perform(
+                post("/api/account").header("X-API-VERSION", "1")
+        ).andDo(print()).andExpect(status().is(200))
+                .andReturn().getResponse().getContentAsString();
+
+        Long responseId = Long.parseLong(accountCreateJsonString);
 
         assertTrue(responseId > 0);
     }
