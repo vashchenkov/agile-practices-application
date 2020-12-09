@@ -73,8 +73,13 @@ public class AccountApiIT {
         ).andDo(print()).andExpect(status().is(200))
                 .andReturn().getResponse().getContentAsString();
 
+        //region FIRST ASSERT ITERATION
         Long responseId = Long.parseLong(accountCreateJsonString);
 
+        assertTrue(responseId > 0);
+        //endregion
+
+        //region SECOND ASSERT ITERATION
         String accountsFoundJsonString = mockMvc.perform(
                 get("/api/account").header("X-API-VERSION", "1")
         ).andDo(print()).andExpect(status().is(200))
@@ -83,9 +88,13 @@ public class AccountApiIT {
 
         Account account = Arrays.stream(accountsFound).filter(it -> it.getId().equals(responseId) ).findFirst().get();
 
-        assertTrue(responseId > 0);
+
         assertEquals(4, accountsFound.length);
+        //endregion
+
+        //region THIRD ASSERT ITERATION
         assertEquals(amount, account.getAmount());
         assertEquals(clientId, account.getClientId());
+        //endregion
     }
 }
