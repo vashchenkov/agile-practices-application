@@ -60,20 +60,25 @@ public class AccountApiIT {
 
     @Test
     public void shouldCreateNewAccountWhenPostRequestPerforms() throws Exception {
+        //region GIVEN (добавить проверку на отсутствие счетов)
         Double amount = 400.;
         Long clientId = 2L;
 
         NewAccountDTO dto = new NewAccountDTO();
         dto.setAmount(amount);
         dto.setClientId(clientId);
+        //endregion
+
+        //region WHEN
         String accountCreateJsonString = mockMvc.perform(
                 post("/api/account").contentType(MediaType.APPLICATION_JSON)
                         .content(jsonMapper.writeValueAsString(dto))
                         .header("X-API-VERSION", "1")
         ).andDo(print()).andExpect(status().is(200))
                 .andReturn().getResponse().getContentAsString();
+        //endregion
 
-        //region FIRST ASSERT ITERATION
+        //region FIRST ASSERT ITERATION (отдельный тест на API)
         Long responseId = Long.parseLong(accountCreateJsonString);
 
         assertTrue(responseId > 0);
