@@ -6,6 +6,7 @@ import com.acme.dbo.client.controller.dto.NewClientDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +38,7 @@ public class ClientApiIT {
 	ObjectMapper jsonMapper;
 
 	@Test
+	@Disabled
 	public void shouldCreateNewDisableClientWithAddressWhenLoginIsFree() throws Exception {
 		String login = "VasyaPetrov";
 		String city = "Moscow";
