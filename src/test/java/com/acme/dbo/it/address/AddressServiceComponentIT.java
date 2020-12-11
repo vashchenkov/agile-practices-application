@@ -1,7 +1,7 @@
 package com.acme.dbo.it.address;
 
 
-import com.acme.dbo.address.controller.AddressController;
+import com.acme.dbo.address.dao.AddressRepository;
 import com.acme.dbo.address.domain.Address;
 import com.acme.dbo.address.service.AddressService;
 import lombok.experimental.FieldDefaults;
@@ -24,23 +24,31 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("it")
 @Slf4j
 @FieldDefaults(level = PRIVATE)
-public class AddressControllerComponentIT {
+public class AddressServiceComponentIT {
 //    @RelaxedMock
 //    private lateinit var validationService: ValidationService
     @Mock
-AddressService service;
+    AddressRepository repository;
     @InjectMocks
-    AddressController sut;
+    AddressService sut;
 
 
     @Test
     public void shouldGetAddressForClientWhenClientIdPassed() {
         Address expected = new Address(1L, "Moscow", "Lenina 14-46", 5L);
-        when(service.findAddressByClientId(5L)).thenReturn(expected);
-        Address address = sut.getAddressForClient(5L);
+        when(repository.findByClientId(5L)).thenReturn(expected);
+        Address address = sut.findAddressByClientId(5L);
 
         assertNotNull(address);
         assertEquals(expected, address);
-        verify(service, times(1)).findAddressByClientId(5L);
+        verify(repository, times(1)).findByClientId(5L);
+    }
+
+    @Test void shouldGetClientFromLegacyWhenNoAddressInSystem() {
+        Address expected = new Address(1L, "Moscow", "Lenina 14-46", 5L);
+        when(repository.findByClientId(5L)).thenReturn(null);
+
+        Address address = sut.findAddressByClientId(5L);
+        assertEquals(expected, address);
     }
 }

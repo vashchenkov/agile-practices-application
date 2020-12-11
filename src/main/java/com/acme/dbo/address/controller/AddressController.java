@@ -1,16 +1,16 @@
 package com.acme.dbo.address.controller;
 
-import com.acme.dbo.address.dao.AddressRepository;
 import com.acme.dbo.address.domain.Address;
+import com.acme.dbo.address.service.AddressService;
 
 public class AddressController {
-    private AddressRepository repository;
+    private AddressService service;
 
     public Address getAddressForClient(long clientId) {
-        return new Address(1L, "Moscow", "Lenina 14-46", 5L);
+        return service.findAddressByClientId(clientId);
     }
 
-    public AddressController (AddressRepository repository) {
-        this.repository = repository;
+    public AddressController (AddressService service) {
+        this.service = service;
     }
 }
