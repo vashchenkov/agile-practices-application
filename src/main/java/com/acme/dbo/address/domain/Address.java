@@ -37,4 +37,8 @@ public class Address {
     //    @Column(name = "AMOUNT", columnDefinition = "DECIMAL(31, 16)")
     @ApiModelProperty(dataType = "String", required = true)
     @NonNull String streetAddress;
+
+    @ApiModelProperty(dataType = "Long")
+    @NonNull
+    Long clientId;
 }

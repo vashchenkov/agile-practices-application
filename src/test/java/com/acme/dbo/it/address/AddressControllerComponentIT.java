@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 
 import static lombok.AccessLevel.PRIVATE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisabledIf(expression = "#{environment['features.account'] == 'false'}", loadContext = true)
@@ -31,8 +32,10 @@ public class AddressControllerComponentIT {
 
     @Test
     public void shouldGetAddressForClientWhenClientIdPassed() {
-        Address address = sut.getAddressForClient();
+        Address expected = new Address(1L, "Moscow", "Lenina 14-46", 5L);
+        Address address = sut.getAddressForClient(5L);
 
         assertNotNull(address);
+        assertEquals(expected, address);
     }
 }
