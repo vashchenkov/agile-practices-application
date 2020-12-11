@@ -2,6 +2,7 @@ package com.acme.dbo.it.address;
 
 
 import com.acme.dbo.address.dao.AddressRepository;
+import com.acme.dbo.address.dao.LegacyAddressRepository;
 import com.acme.dbo.address.domain.Address;
 import com.acme.dbo.address.service.AddressService;
 import lombok.experimental.FieldDefaults;
@@ -31,6 +32,8 @@ public class AddressServiceComponentIT {
     AddressRepository repository;
     @InjectMocks
     AddressService sut;
+    @Mock
+    LegacyAddressRepository legacyRepository;
 
 
     @Test
@@ -42,11 +45,13 @@ public class AddressServiceComponentIT {
         assertNotNull(address);
         assertEquals(expected, address);
         verify(repository, times(1)).findByClientId(5L);
+        verify(legacyRepository, times(0)).findByClientId(any());
     }
 
     @Test void shouldGetClientFromLegacyWhenNoAddressInSystem() {
         Address expected = new Address(1L, "Moscow", "Lenina 14-46", 5L);
         when(repository.findByClientId(5L)).thenReturn(null);
+        when(legacyRepository.findByClientId(5L)).thenReturn(expected);
 
         Address address = sut.findAddressByClientId(5L);
         assertEquals(expected, address);
